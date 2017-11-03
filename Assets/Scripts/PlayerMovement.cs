@@ -38,8 +38,6 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         float h = Input.GetAxis("Horizontal");
-        if (h != 0)
-            print(h);
 
         if (h * rb2d.velocity.x < maxSpeed)
             rb2d.AddForce(Vector2.right * h * moveForce);
