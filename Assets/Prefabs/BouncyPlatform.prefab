@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 61459832160707106}
   - component: {fileID: 251485035046107708}
   m_Layer: 8
-  m_Name: Platform 1
+  m_Name: BouncyPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
