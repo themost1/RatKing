@@ -4,46 +4,30 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public float speed;             //Floating point variable to store the player's movement speed.
-    public float jumpSpeed;
-    public bool grounded = false;
+    [HideInInspector]
+    public bool facingRight = true;
+    [HideInInspector]
     public bool jump = false;
-    public float defaultMass = 3.5f;
-    public float massMultiplier = 1f;
-    //local scale default x and y
-    public float initialLSX;
-    public float initialLSY;
+    public float moveForce = 365f;
+    public float maxSpeed = 5f;
+    public float jumpForce = 1000f;
+    public Transform groundCheck;
 
 
-    public Transform groundCheck1, groundCheck2, groundCheck3;
+    private bool grounded = false;
+    private Rigidbody2D rb2d;
 
-
-    private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
 
     // Use this for initialization
     void Awake()
     {
-        //Get and store a reference to the Rigidbody2D component so that we can access it.
         rb2d = GetComponent<Rigidbody2D>();
     }
 
-    void Start()
-    {
-        rb2d.mass = defaultMass;
-        initialLSX = transform.localScale.x;
-        initialLSY = transform.localScale.y;
-    }
-
+    // Update is called once per frame
     void Update()
     {
-        if (Physics2D.Linecast(transform.position, groundCheck1.position, 1 << LayerMask.NameToLayer("Ground")))
-            grounded = true;
-        else if (Physics2D.Linecast(transform.position, groundCheck2.position, 1 << LayerMask.NameToLayer("Ground")))
-            grounded = true;
-        else if (Physics2D.Linecast(transform.position, groundCheck3.position, 1 << LayerMask.NameToLayer("Ground")))
-            grounded = true;
-        else
-            grounded = false;
+        grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
 
         if (Input.GetButtonDown("Jump") && grounded)
         {
@@ -51,32 +35,36 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    //FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
     void FixedUpdate()
     {
+        float h = Input.GetAxis("Horizontal");
+        if (h != 0)
+            print(h);
+
+        if (h * rb2d.velocity.x < maxSpeed)
+            rb2d.AddForce(Vector2.right * h * moveForce);
+
+        if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
+            rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+
+        if (h > 0 && !facingRight)
+            Flip();
+        else if (h < 0 && facingRight)
+            Flip();
+
         if (jump)
         {
-            rb2d.AddForce(new Vector2(0f, jumpSpeed), ForceMode2D.Impulse);
+            rb2d.AddForce(new Vector2(0f, jumpForce));
             jump = false;
         }
-        //Store the current horizontal input in the float moveHorizontal.
-        float moveHorizontal = Input.GetAxis("Horizontal");
+    }
 
-        //Use the two store floats to create a new Vector2 variable movement.
-        Vector2 movement = new Vector2(moveHorizontal, 0);
 
-        //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
-        rb2d.AddForce(movement * speed);
-
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            massMultiplier += 0.02f;
-        } else if (Input.GetKeyDown(KeyCode.S))
-        {
-            massMultiplier -= 0.02f;
-        }
-
-        rb2d.mass = massMultiplier * defaultMass;
-        transform.localScale = new Vector3(massMultiplier, massMultiplier, massMultiplier);
+    void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 }
