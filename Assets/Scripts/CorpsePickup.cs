@@ -25,6 +25,11 @@ public class CorpsePickup : MonoBehaviour
             other.gameObject.GetComponent<Inventory>().changeMass(thisMass);
             Destroy(gameObject);
         }
+
+		if (other.gameObject.CompareTag ("Enemy")) {
+			other.gameObject.GetComponent<EnemyScript> ().dealDamage (thisMass);
+		
+		}
     }
 
     void OnTriggerExit2D(Collider2D other)
