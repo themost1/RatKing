@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public bool jump = false;
     public float moveForce = 365f;
     public float maxSpeed = 5f;
+	public float throwSpeed = 100f;
     public float jumpForce = 1000f;
     public Transform groundCheck;
     public GameObject projectileObj;
@@ -23,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+		throwSpeed = 20;
         rb2d = GetComponent<Rigidbody2D>();
         projectile = projectileObj.GetComponent<Rigidbody2D>();
     }
@@ -74,7 +76,8 @@ public class PlayerMovement : MonoBehaviour
             gameObject.GetComponent<Inventory>().changeMass(-1);
             GameObject clone = Instantiate(projectileObj, transform.position, transform.rotation);
 
-            clone.GetComponent<Rigidbody2D>().velocity = Vector2.right * 5;
+			clone.GetComponent<Rigidbody2D>().velocity = Vector2.right *throwDir * throwSpeed;
+			clone.GetComponent<Rigidbody2D> ().gravityScale = 1;
             clone.GetComponent<CorpsePickup>().thrownByPlayer = true;
         }
     }
