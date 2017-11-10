@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour {
 
-    public int corpsesHeld = 0;
+    public float massHeld = 0f;
     private Rigidbody2D rb2d;
     public float defaultMass = 3.5f;
     public float massMultiplier = 1f;
@@ -20,14 +20,14 @@ public class Inventory : MonoBehaviour {
 		
 	}
 
-    void OnTriggerEnter(Collider other)
+    public void changeMass(float delta)
     {
-        corpsesHeld++;
+        massHeld = massHeld + delta;
     }
 
     // Update is called once per frame
     void Update () {
-        massMultiplier = 1f + 0.1f * corpsesHeld;
+        massMultiplier = 1f + 0.1f * massHeld;
 
         rb2d.mass = massMultiplier * defaultMass;
         transform.localScale = new Vector3(massMultiplier, massMultiplier, massMultiplier);
@@ -35,6 +35,6 @@ public class Inventory : MonoBehaviour {
 
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 100, 20), "thisistext"+corpsesHeld);
+        //GUI.Label(new Rect(10, 10, 100, 20), "thisistext"+corpsesHeld);
     }
 }

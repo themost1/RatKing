@@ -37,7 +37,17 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        float h = Input.GetAxis("Horizontal");
+        float h = 0;
+        if (Input.GetKeyDown(KeyCode.A))
+            h = -1f;
+        else if (Input.GetKeyDown(KeyCode.D))
+            h = 1f;
+
+        float throwDir = 0;
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            throwDir = 1;
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            throwDir = -1;
 
         if (h * rb2d.velocity.x < maxSpeed)
             rb2d.AddForce(Vector2.right * h * moveForce);
@@ -54,6 +64,11 @@ public class PlayerMovement : MonoBehaviour
         {
             rb2d.AddForce(new Vector2(0f, jumpForce));
             jump = false;
+        }
+
+        if (throwDir!=0)
+        {
+
         }
     }
 
