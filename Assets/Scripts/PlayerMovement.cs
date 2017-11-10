@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed = 5f;
     public float jumpForce = 1000f;
     public Transform groundCheck;
+    public GameObject projectileObj;
+    public Rigidbody2D projectile;
 
 
     private bool grounded = false;
@@ -22,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         rb2d = GetComponent<Rigidbody2D>();
+        projectile = projectileObj.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -38,15 +41,15 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         float h = 0;
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKey(KeyCode.A))
             h = -1f;
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D))
             h = 1f;
 
         float throwDir = 0;
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
             throwDir = 1;
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKey(KeyCode.LeftArrow))
             throwDir = -1;
 
         if (h * rb2d.velocity.x < maxSpeed)
@@ -66,9 +69,13 @@ public class PlayerMovement : MonoBehaviour
             jump = false;
         }
 
-        if (throwDir!=0)
+        if (throwDir!=0 && gameObject.GetComponent<Inventory>().massHeld>=1)
         {
+            gameObject.GetComponent<Inventory>().changeMass(-1);
+            GameObject clone = Instantiate(projectileObj, transform.position, transform.rotation);
 
+            clone.GetComponent<Rigidbody2D>().velocity = Vector2.right * 5;
+            clone.GetComponent<CorpsePickup>().thrownByPlayer = true;
         }
     }
 
