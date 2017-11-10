@@ -139,6 +139,8 @@ MonoBehaviour:
     type: 2}
   projectile: {fileID: 50923130009974152, guid: 8224db0abb890b447b34498e5b143d9a,
     type: 2}
+  jumpParticle: {fileID: 1083961986465022, guid: 97724fbba325c5a41ba43ba2bcb24132,
+    type: 2}
 --- !u!114 &114860320448565784
 MonoBehaviour:
   m_ObjectHideFlags: 1
