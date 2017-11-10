@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public GameObject projectileObj;
     public Rigidbody2D projectile;
+	public GameObject jumpParticle;
 
 
     private bool grounded = false;
@@ -36,6 +37,15 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && grounded)
         {
+			Collider2D col = GetComponent<Collider2D>();
+			Vector2 loc = transform.position;
+			loc.y = loc.y - col.bounds.extents.y;
+			Vector2 loc2 = transform.position;
+			loc2.y = loc2.y + col.bounds.extents.y;
+			GameObject child = Instantiate (jumpParticle, loc, Quaternion.identity);
+			GameObject child2 = Instantiate (jumpParticle, loc2, Quaternion.AngleAxis(90, Vector3.forward));
+			child.transform.parent = transform;
+			child2.transform.parent = transform;
             jump = true;
         }
     }
