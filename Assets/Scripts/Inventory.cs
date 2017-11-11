@@ -7,7 +7,8 @@ public class Inventory : MonoBehaviour {
     public float massHeld = 0f;
     private Rigidbody2D rb2d;
     public float defaultMass = 3.5f;
-    public float massMultiplier = 1f;
+	public float massScale = 2.0f;
+    public float massMultiplier = 2f;
 
     // Use this for initialization
     void Awake()
@@ -27,7 +28,7 @@ public class Inventory : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        massMultiplier = 1f + 0.1f * massHeld;
+		massMultiplier = massScale*(1f + 0.1f * massHeld);
 
         rb2d.mass = massMultiplier * defaultMass;
         transform.localScale = new Vector3(massMultiplier, massMultiplier, massMultiplier);
