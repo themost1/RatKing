@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour {
 
-    public float cameraDistOffset = 10;
+    public float cameraDistOffset = 50;
     private Camera mainCamera;
     private GameObject player;
 

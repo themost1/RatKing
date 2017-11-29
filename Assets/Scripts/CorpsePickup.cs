@@ -28,7 +28,6 @@ public class CorpsePickup : MonoBehaviour
 
 		if (other.gameObject.CompareTag ("Enemy")) {
 			other.gameObject.GetComponent<EnemyScript> ().dealDamage (thisMass);
-		
 		}
     }
 
