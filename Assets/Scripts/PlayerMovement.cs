@@ -17,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody2D projectile;
 	public GameObject jumpParticle;
 
+    private bool hasJetpack;
+
+    private bool canThrow = true;
+
 
     private bool grounded = false;
     private Rigidbody2D rb2d;
@@ -35,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
     {
         grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
 
-        if (Input.GetButtonDown("Jump") && grounded)
+        if ((Input.GetButtonDown("Jump") && grounded) || (Input.GetButton("Jump") && hasJetpack))
         {
 			Collider2D col = GetComponent<Collider2D>();
 			Vector2 loc = col.bounds.center;
@@ -63,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
             throwDir = 1;
         else if (Input.GetKey(KeyCode.LeftArrow))
             throwDir = -1;
+        if (throwDir == 0) { canThrow = true; }
 
         if (h * rb2d.velocity.x < maxSpeed)
             rb2d.AddForce(Vector2.right * h * moveForce);
@@ -81,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
             jump = false;
         }
 
-        if (throwDir!=0 && gameObject.GetComponent<Inventory>().massHeld>=1)
+        if (throwDir!=0 && gameObject.GetComponent<Inventory>().massHeld>=1 && canThrow)
         {
             gameObject.GetComponent<Inventory>().changeMass(-1);
             GameObject clone = Instantiate(projectileObj, transform.position, transform.rotation);
@@ -89,9 +94,16 @@ public class PlayerMovement : MonoBehaviour
 			clone.GetComponent<Rigidbody2D>().velocity = Vector2.right *throwDir * throwSpeed;
 			clone.GetComponent<Rigidbody2D> ().gravityScale = 1;
             clone.GetComponent<CorpsePickup>().thrownByPlayer = true;
+
+            //so particles don't fly out all at once
+            canThrow = false;
         }
     }
 
+    public void setJetpack(bool jetpack)
+    {
+        hasJetpack = jetpack;
+    }
 
     void Flip()
     {
